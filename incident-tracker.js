@@ -31,31 +31,46 @@ const incidentObject3 = {
 
 const incidents = [incidentObject1, incidentObject2, incidentObject3];
 
-function addIncident(incidents, id, title, severity, status, source, description, resolved) {
-    const newIncidentObject = {
-        id: id,
-        title: title,
-        severity: severity,
-        status: status,
-        source: source,
-        description: description,
-        resolved: resolved
-    };
+function addIncident() {
+    const newIncidentObject = main();
     incidents.push(newIncidentObject);
     return newIncidentObject;
 }
 
-newIncident = addIncident(
-    incidents,
-    7,
-    "Brute Force Attack",
-    "High",
-    "contained",
-    "IDS",
-    "Multiple brute force attempts were detected.",
-    true
-);
+async function getNewIncident() {
+    const newTitle = await rl.question("Incident Title: ");
+    const newId = await rl.question("Incident ID: "); //TESTING TO CHECK ADDING INTO ARRAY/OBJECT, REMOVE LATER AND ADD AUTO ASSIGNED IDS
+    const newSeverity = await rl.question("Incident Severity Level, Low, Medium, High, Critical: "); //case sensitive for now
+    const newStatus = await rl.question("Incident Status: ");
+    const newSource = await rl.question("Incident Source: ");
+    const newDesc = await rl.question("Incident Description: ");
+    const newResolved = await rl.question("Is Incident Resolved? (yes/no): ");
+    rl.close();
+    const newIncidentObject = {
+        id: newId,
+        title: newTitle,
+        severity: newSeverity,
+        status: newStatus,
+        source: newSource,
+        description: newDesc,
+        resolved: newResolved
+    };
+    return newIncidentObject;
 
+}
+
+//const newIncident = await getNewIncident();
+
+//addIncident(
+    //incidents,
+    //newIncident.id,
+    //newIncident.title,
+    //newIncident.severity,
+    //newIncident.status,
+    //newIncident.source,
+    //newIncident.description,
+    //newIncident.resolved
+//);
 
 function incidentCounter(incidents) {
     const incidentCount = incidents.length;
@@ -104,8 +119,19 @@ const rl = readline.createInterface({
     output: process.stdout
 });
 
-const incidentTitle = await rl.question("Enter incident title: ");
 
-console.log(incidentTitle);
 
-rl.close();
+
+//getNewIncident();
+//console.log(incidents);
+
+
+async function main() {
+    const newIncident = await getNewIncident();
+    console.log(newIncident);
+    return newIncident;
+}
+
+const newIncidentObject = addIncident();
+incidents.push(newIncidentObject);
+console.log(incidents);
