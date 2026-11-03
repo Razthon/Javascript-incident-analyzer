@@ -31,8 +31,8 @@ const incidentObject3 = {
 
 const incidents = [incidentObject1, incidentObject2, incidentObject3];
 
-function addIncident() {
-    const newIncidentObject = main();
+async function addIncident() {
+    const newIncidentObject = await getNewIncident();
     incidents.push(newIncidentObject);
     return newIncidentObject;
 }
@@ -45,7 +45,6 @@ async function getNewIncident() {
     const newSource = await rl.question("Incident Source: ");
     const newDesc = await rl.question("Incident Description: ");
     const newResolved = await rl.question("Is Incident Resolved? (yes/no): ");
-    rl.close();
     const newIncidentObject = {
         id: newId,
         title: newTitle,
@@ -127,11 +126,10 @@ const rl = readline.createInterface({
 
 
 async function main() {
-    const newIncident = await getNewIncident();
-    console.log(newIncident);
+    const newIncident = await addIncident();
+    console.log(incidents);
     return newIncident;
+    rl.close();
 }
 
-const newIncidentObject = addIncident();
-incidents.push(newIncidentObject);
-console.log(incidents);
+main();
