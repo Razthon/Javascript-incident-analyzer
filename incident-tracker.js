@@ -1,7 +1,7 @@
 const readline = require("node:readline/promises"); 
 
 const incidentObject1 = {
-    id: 214359,
+    id: 1,
     title: "Remote Code Execution on Database",
     severity: "Critical",
     status: "investigating",
@@ -10,7 +10,7 @@ const incidentObject1 = {
     resolved: false
 };
 const incidentObject2 = {
-    id: 176541,
+    id: 2,
     title: "Suspicious failed logins from IP",
     severity: "Low",
     status: "resolved",
@@ -19,7 +19,7 @@ const incidentObject2 = {
     resolved: true
 };
 const incidentObject3 = {
-    id: 102934,
+    id: 3,
     title: "Suspected file exfiltration",
     severity: "High",
     status: "contained",
@@ -37,13 +37,85 @@ async function addIncident() {
 }
 
 async function getNewIncident() {
-    const newTitle = await rl.question("Incident Title: ");
-    const newId = await rl.question("Incident ID: "); //TESTING TO CHECK ADDING INTO ARRAY/OBJECT, REMOVE LATER AND ADD AUTO ASSIGNED IDS
-    const newSeverity = await rl.question("Incident Severity Level, Low, Medium, High, Critical: "); //case sensitive for now
-    const newStatus = await rl.question("Incident Status: ");
-    const newSource = await rl.question("Incident Source: ");
-    const newDesc = await rl.question("Incident Description: ");
-    const newResolved = await rl.question("Is Incident Resolved? (yes/no): ");
+    let newTitle = "" //Variables must be set outside the loops and be set with let to allow for changing the values
+    let newId = ""
+    let newSeverity = ""
+    let newStatus = ""
+    let newSource = ""
+    let newDesc = ""
+    let newResolved = ""
+    while (true) {
+        newTitle = await rl.question("Incident Title: ");
+        if (newTitle.trim() === ""){
+            console.log("Please type an answer in the field")
+        }
+        else {
+            break
+        }
+    }
+    
+    while (true) {
+        newSeverity = (await rl.question("Incident Severity Level, Low, Medium, High, Critical: "));
+        newSeverity = newSeverity.trim().toLowerCase();
+        newSeverity = newSeverity.charAt(0).toUpperCase() + newSeverity.slice(1);
+        if (newSeverity === ""){
+            console.log("Please type an answer in the field")
+        }
+        else if (newSeverity !== "Low" && newSeverity !== "Medium" && newSeverity !== "High" && newSeverity !== "Critical") {
+            console.log("Invalid Value")
+        }
+        else {
+            break
+        }
+    }
+    while (true) {
+        newStatus = await rl.question("Incident Status: ");
+        if (newStatus.trim() === ""){
+            console.log("Please type an answer in the field") 
+        }
+        else {
+            break
+        }
+    }
+    while (true) {
+        newSource = await rl.question("Incident Source: ");
+        if (newSource.trim() === ""){
+            console.log("Please type an answer in the field")
+        }
+        else {
+            break
+        }
+    }
+    while (true) {
+        newDesc = await rl.question("Incident Description: ");
+        if (newDesc.trim() === ""){
+            console.log("Please type an answer in the field")   
+        }
+        else {
+            break
+        }
+    }
+    while (true) {
+        newResolved = await rl.question("Is Incident Resolved? (yes/no): ");
+        newResolved = newResolved.trim().toLowerCase();
+        if (newResolved === ""){
+            console.log("Please type an answer in the field")
+            
+        }
+        else if (newResolved !== "yes" && newResolved !== "no")
+            console.log("Invalid Value")
+        else {
+            if (newResolved === "yes") {
+                newResolved = true
+            }
+            else {
+                newResolved = false
+            }
+            break
+        }
+    }
+
+
     const newIncidentObject = {
         id: newId,
         title: newTitle,
@@ -57,18 +129,6 @@ async function getNewIncident() {
 
 }
 
-//const newIncident = await getNewIncident();
-
-//addIncident(
-    //incidents,
-    //newIncident.id,
-    //newIncident.title,
-    //newIncident.severity,
-    //newIncident.status,
-    //newIncident.source,
-    //newIncident.description,
-    //newIncident.resolved
-//);
 
 function incidentCounter(incidents) {
     const incidentCount = incidents.length;
@@ -138,7 +198,10 @@ async function main(programActive) {
         }
         else if (menuOption === "3") {
         programActive = false;   
-        }   
+        }
+        else {
+            console.log("Invalid Answer, Please Try Again");
+        }
     }
     rl.close();
 }
