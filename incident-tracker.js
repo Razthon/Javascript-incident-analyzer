@@ -34,7 +34,6 @@ const incidents = [incidentObject1, incidentObject2, incidentObject3];
 async function addIncident() {
     const newIncidentObject = await getNewIncident();
     incidents.push(newIncidentObject);
-    return newIncidentObject;
 }
 
 async function getNewIncident() {
@@ -125,11 +124,23 @@ const rl = readline.createInterface({
 //console.log(incidents);
 
 
-async function main() {
-    const newIncident = await addIncident();
-    console.log(incidents);
-    return newIncident;
+async function main(programActive) {
+    console.log("Welcome to the incident tracker program!")
+    while (programActive === true) {
+        const menuOption = await rl.question("Please type '1' to add a new incident or '2' to view existing incidents. Type '3' to exit:");
+        if (menuOption === "1") {
+            await addIncident();//doesn't need output, the array gets updated inside the function and that saves universally
+            
+        }
+        else if (menuOption === "2") {
+            console.log("Current Incidents: "); 
+            console.log(incidents);
+        }
+        else if (menuOption === "3") {
+        programActive = false;   
+        }   
+    }
     rl.close();
 }
-
-main();
+const programActive = true
+main(programActive);
