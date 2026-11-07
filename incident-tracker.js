@@ -19,7 +19,7 @@ const incidentObject2 = {
     resolved: true
 };
 const incidentObject3 = {
-    id: 3,
+    id: 4,
     title: "Suspected file exfiltration",
     severity: "High",
     status: "contained",
@@ -32,13 +32,27 @@ const incidentObject3 = {
 const incidents = [incidentObject1, incidentObject2, incidentObject3];
 
 async function addIncident() {
-    const newIncidentObject = await getNewIncident();
-    incidents.push(newIncidentObject);
+    let loopGood = "no"
+    while (loopGood === "no") {
+        const newIncidentObject = await getNewIncident();
+        console.log(newIncidentObject)
+        loopGood = (await rl.question("Is this correct? (yes/no): "))
+        if (loopGood.toLowerCase() ==="yes") {
+            incidents.push(newIncidentObject);
+        }
+        else if (loopGood.toLowerCase() === "no")
+            console.log("Okay, let's try again!")
+        else {
+            console.log("Sorry an error occured please try again!")
+        }
+    }
+    
+    
 }
 
 async function getNewIncident() {
     let newTitle = "" //Variables must be set outside the loops and be set with let to allow for changing the values
-    let newId = ""
+    let newId = 0
     let newSeverity = ""
     let newStatus = ""
     let newSource = ""
@@ -53,9 +67,16 @@ async function getNewIncident() {
             break
         }
     }
-    
+    let highestId = 0;
+    for (let count = 0; count < incidents.length; count++) {
+        if (incidents[count].id > highestId) {
+            highestId = incidents[count].id;
+        }
+        //newId = count + 1 //For loop to count objects in the incidents array, likely inefficient but oh well it works fine.
+    }
+    newId = highestId +1;
     while (true) {
-        newSeverity = (await rl.question("Incident Severity Level, Low, Medium, High, Critical: "));
+        newSeverity = (await rl.question("Incident Severity Level (Low, Medium, High, Critical): "));
         newSeverity = newSeverity.trim().toLowerCase();
         newSeverity = newSeverity.charAt(0).toUpperCase() + newSeverity.slice(1);
         if (newSeverity === ""){
@@ -69,18 +90,31 @@ async function getNewIncident() {
         }
     }
     while (true) {
-        newStatus = await rl.question("Incident Status: ");
-        if (newStatus.trim() === ""){
-            console.log("Please type an answer in the field") 
+        newStatus = await rl.question("Incident Status (Open, Investigating, Contained, Resolved): ");
+        newStatus = newStatus.trim().toLowerCase();
+        newStatus = newStatus.charAt(0).toUpperCase() + newStatus.slice(1);
+        if (newStatus === ""){
+            console.log("Please type an answer in the field")
+        }
+        else if (newStatus !== "Open" && newStatus !== "Investigating" && newStatus !== "Contained" && newStatus !== "Resolved") {
+            console.log("Invalid Value")
         }
         else {
+            if (newStatus === "Resolved") {
+                newResolved = true
+            }
             break
         }
     }
     while (true) {
-        newSource = await rl.question("Incident Source: ");
-        if (newSource.trim() === ""){
+        newSource = await rl.question("Incident Source (Firewall, IDS, SIEM, User report, Edr, Other): ");
+        newSource = newSource.trim().toLowerCase();
+        newSource = newSource.charAt(0).toUpperCase() + newSource.slice(1);
+        if (newSource === ""){
             console.log("Please type an answer in the field")
+        }
+        else if (newSource !== "Firewall" && newSource !== "Ids" && newSource !== "Siem" && newSource !== "User report" && newSource !== "Edr" && newSource !== "Other") {
+            console.log("Invalid Value")
         }
         else {
             break
@@ -88,32 +122,18 @@ async function getNewIncident() {
     }
     while (true) {
         newDesc = await rl.question("Incident Description: ");
-        if (newDesc.trim() === ""){
+        newDesc = newDesc.trim()
+        if (newDesc === ""){
             console.log("Please type an answer in the field")   
         }
+        else if (newDesc.length < 20) {
+            console.log("Please add more context (at least 20 characters)")
+        }
         else {
             break
         }
     }
-    while (true) {
-        newResolved = await rl.question("Is Incident Resolved? (yes/no): ");
-        newResolved = newResolved.trim().toLowerCase();
-        if (newResolved === ""){
-            console.log("Please type an answer in the field")
-            
-        }
-        else if (newResolved !== "yes" && newResolved !== "no")
-            console.log("Invalid Value")
-        else {
-            if (newResolved === "yes") {
-                newResolved = true
-            }
-            else {
-                newResolved = false
-            }
-            break
-        }
-    }
+    
 
 
     const newIncidentObject = {
