@@ -50,7 +50,7 @@ async function addIncident() {
     
 }
 
-async function getNewIncident() {
+async function getNewIncident(incidents) {
     let newTitle = "" //Variables must be set outside the loops and be set with let to allow for changing the values
     let newId = 0
     let newSeverity = ""
@@ -58,6 +58,7 @@ async function getNewIncident() {
     let newSource = ""
     let newDesc = ""
     let newResolved = ""
+    
     while (true) {
         newTitle = await rl.question("Incident Title: ");
         if (newTitle.trim() === ""){
@@ -204,12 +205,12 @@ const rl = readline.createInterface({
 //console.log(incidents);
 
 
-async function main(programActive) {
+async function main(programActive, incidents) {
     console.log("Welcome to the incident tracker program!")
     while (programActive === true) {
         const menuOption = await rl.question("Please type '1' to add a new incident or '2' to view existing incidents. Type '3' to exit:");
         if (menuOption === "1") {
-            await addIncident();//doesn't need output, the array gets updated inside the function and that saves universally
+            await addIncident(incidents);//doesn't need output, the array gets updated inside the function and that saves universally
             
         }
         else if (menuOption === "2") {
